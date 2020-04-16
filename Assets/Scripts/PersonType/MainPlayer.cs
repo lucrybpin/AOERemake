@@ -48,7 +48,7 @@ public class MainPlayer : MonoBehaviour {
             break;
         }
 
-        Debug.Log(movementDirection);
+        //Debug.Log(movementDirection);
         this.transform.position = playerPos;
 
     }

@@ -72,9 +72,10 @@ public class World : MonoBehaviour
 
     private Vector3 spawnPlayerInCenter {
         get {
-            int worldCentre = (worldX + worldZ) / chunkSize;
+            int worldCentreX = worldX / 2;
+            int worldCentreZ = worldZ / 2;
             Vector3 centerPos = new Vector3(
-                worldCentre, 2.3f, worldCentre
+                worldCentreX, 2.3f, worldCentreZ
             );
             return centerPos;
         }
