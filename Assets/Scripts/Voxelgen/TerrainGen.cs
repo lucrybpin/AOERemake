@@ -11,6 +11,10 @@ public class TerrainGen : MonoBehaviour
     private Transform terrainHolder;
 
     private World world;
+    private ObjectPlacement objectPlacement;
+    private Chunk chunk;
+
+    
 
     private void noiseGenereation(Vector3[] verts, int v)
     {
@@ -22,14 +26,15 @@ public class TerrainGen : MonoBehaviour
         verts[v].y = (noiseIndex / noiseSmoothing) * 1f;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         world = FindObjectOfType<World>() as World;
         terrainHolder = FindObjectOfType<TerrainPool>().transform;
         Mesh mesh = this.GetComponent<MeshFilter>().mesh;
+        objectPlacement = FindObjectOfType<ObjectPlacement>();
+        chunk = this.GetComponent<Chunk>();
 
-        Vector3[] verts = mesh.vertices;
+        Vector3 [ ] verts = mesh.vertices;
 
         for (int v = 0; v < verts.Length; v++)
         {
@@ -53,8 +58,7 @@ public class TerrainGen : MonoBehaviour
         mesh.RecalculateNormals();
 
         this.gameObject.AddComponent<MeshCollider>();
-
-        ObjectPlacementGrid(mesh);
+        objectPlacement.AddToPlacementGrid(mesh, chunk, this.transform);
     }
 
     private void OnDestroy()
@@ -96,35 +100,6 @@ public class TerrainGen : MonoBehaviour
             getTerrainRocks.transform.SetParent(terrainHolder);
 
             rockCollection.Add(getTerrainRocks);
-        }
-    }
-
-    private void ObjectPlacementGrid(Mesh mesh) {
-
-        //in progress...
-
-        //Strategy is to find the center of the square of each chunk and store it in a array or list
-        
-        //1. Get the Grid
-        //2. Relate Grid to Chunk
-        //3. Onclick -> find Grid index and chunk related
-        //4. Grid index should point to a Building
-
-        //Future Problems:
-        //How to handle changes in the environment?
-        //How to handle different levels in Y axis?
-
-        int i = 0;
-        Vector3 firstPoint = new Vector3();
-        Vector3 lastPoint = new Vector3();
-
-        //For every square (4 vertices)
-        for (int it = 0; it < mesh.vertices.Length; it+=4) {
-            firstPoint = mesh.vertices [ it ];//1
-            lastPoint = mesh.vertices [ it + 2 ];//3
-            GameObject centerCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            centerCube.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            centerCube.transform.position = ( ( transform.TransformPoint(firstPoint) + transform.TransformPoint(lastPoint) ) / 2 );
         }
     }
 }
